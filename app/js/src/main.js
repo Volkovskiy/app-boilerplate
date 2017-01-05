@@ -1,3 +1,3 @@
-let myFunc = (a, b, c) => console.log(a, b, c);
+import page from './test';
 
-myFunc(1, 4, 5)
+page.innerHTML = "<div>Hello world!</div>";

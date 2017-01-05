@@ -1,5 +1,4 @@
 var gulp = require('gulp'),
-	babel = require("gulp-babel"),
 	gutil = require('gulp-util'),
 	sass = require('gulp-sass'),
 	browserSync = require('browser-sync'),
@@ -14,6 +13,8 @@ var gulp = require('gulp'),
 	autoprefixer = require('gulp-autoprefixer'),
 	fileinclude = require('gulp-file-include'),
 	gulpRemoveHtml = require('gulp-remove-html'),
+ 	webpack = require('webpack-stream'),
+	babel = require('babel-loader'),
 	bourbon = require('node-bourbon');
 
 gulp.task('browser-sync', function() {
@@ -69,18 +70,35 @@ gulp.task('libs', function() {
 		.pipe(gulp.dest('app/js'));
 });
 
-gulp.task('toes5', function() {
+gulp.task('es5', function() {
 	return gulp.src("app/js/src/*.js")
-		.pipe(babel())
-		.pipe(concat('common.js'))
+		.pipe(webpack({
+			output: {
+				//path: '/app/js/',
+				filename: 'common.js'
+			},
+			module: {
+				loaders: [{
+					loader: 'babel',
+					query: {
+						presets: ['es2015']
+					}
+				}]
+			},
+				resolve: {
+					extensions: ['', '.js']
+				}
+			}
+		))
+		//.pipe(concat('common.js'))
 		.pipe(gulp.dest('app/js'));
 });
 
 
-gulp.task('watch', ['sass', 'libs', 'toes5', 'browser-sync'], function() {
+gulp.task('watch', ['sass', 'libs', 'es5', 'browser-sync'], function() {
 	gulp.watch('app/header.sass', ['headersass']);
 	gulp.watch('app/sass/**/*.sass', ['sass']);
-	gulp.watch('app/js/**/*.js', ['toes5']);
+	gulp.watch('app/js/**/*.js', ['es5']);
 	gulp.watch('app/*.html', browserSync.reload);
 	gulp.watch('app/js/**/*.js', browserSync.reload);
 });
