@@ -11,8 +11,6 @@ var gulp = require('gulp'),
 	pngquant = require('imagemin-pngquant'),
 	cache = require('gulp-cache'),
 	autoprefixer = require('gulp-autoprefixer'),
-	fileinclude = require('gulp-file-include'),
-	gulpRemoveHtml = require('gulp-remove-html'),
  	webpack = require('webpack-stream'),
 	babel = require('babel-loader'),
 	bourbon = require('node-bourbon');
@@ -90,7 +88,6 @@ gulp.task('es5', function() {
 				}
 			}
 		))
-		//.pipe(concat('common.js'))
 		.pipe(gulp.dest('app/js'));
 });
 
@@ -116,20 +113,11 @@ gulp.task('imagemin', function() {
 		.pipe(gulp.dest('dist/img'));
 });
 
-gulp.task('buildhtml', function() {
-	gulp.src(['app/*.html'])
-		.pipe(fileinclude({
-			prefix: '@@'
-		}))
-		.pipe(gulpRemoveHtml())
-		.pipe(gulp.dest('dist/'));
-});
-
 gulp.task('removedist', function() {
 	return del.sync('dist');
 });
 
-gulp.task('build', ['removedist', 'buildhtml', 'imagemin', 'sass', 'libs'], function() {
+gulp.task('build', ['removedist', 'imagemin', 'sass', 'libs'], function() {
 
 	var buildCss = gulp.src([
 		'app/css/fonts.min.css',
@@ -137,12 +125,12 @@ gulp.task('build', ['removedist', 'buildhtml', 'imagemin', 'sass', 'libs'], func
 	]).pipe(gulp.dest('dist/css'));
 
 	var buildFiles = gulp.src([
-		'app/.htaccess'
+		'app/index.html'
 	]).pipe(gulp.dest('dist'));
 
 	var buildFonts = gulp.src('app/fonts/**/*').pipe(gulp.dest('dist/fonts'));
 
-	var buildJs = gulp.src('app/js/**/*').pipe(gulp.dest('dist/js'));
+	var buildJs = gulp.src('app/js/common.js').pipe(gulp.dest('dist/js'));
 
 });
 
