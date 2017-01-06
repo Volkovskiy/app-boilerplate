@@ -13,6 +13,7 @@ var gulp = require('gulp'),
 	autoprefixer = require('gulp-autoprefixer'),
  	webpack = require('webpack-stream'),
 	babel = require('babel-loader'),
+	styleInject = require("gulp-style-inject"),
 	bourbon = require('node-bourbon');
 
 gulp.task('browser-sync', function() {
@@ -24,7 +25,7 @@ gulp.task('browser-sync', function() {
 	});
 });
 
-gulp.task('sass', ['headersass'], function() {
+gulp.task('sass', function() {
 	return gulp.src('app/sass/**/*.sass')
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -41,7 +42,16 @@ gulp.task('sass', ['headersass'], function() {
 		}))
 });
 
-gulp.task('headersass', function() {
+gulp.task('html', function () {
+	return setTimeout(function () {
+		return	gulp.src("./app/html/*.html")
+			.pipe(styleInject())
+			.pipe(gulp.dest("./app"));
+	}, 500)
+
+});
+
+gulp.task('headersass', ['html'], function() {
 	return gulp.src('app/header.sass')
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -72,7 +82,6 @@ gulp.task('es5', function() {
 	return gulp.src("app/js/src/*.js")
 		.pipe(webpack({
 			output: {
-				//path: '/app/js/',
 				filename: 'common.js'
 			},
 			module: {
@@ -91,8 +100,7 @@ gulp.task('es5', function() {
 		.pipe(gulp.dest('app/js'));
 });
 
-
-gulp.task('watch', ['sass', 'libs', 'es5', 'browser-sync'], function() {
+gulp.task('watch', ['sass', 'headersass', 'libs', 'es5', 'browser-sync'], function() {
 	gulp.watch('app/header.sass', ['headersass']);
 	gulp.watch('app/sass/**/*.sass', ['sass']);
 	gulp.watch('app/js/**/*.js', ['es5']);
@@ -117,7 +125,7 @@ gulp.task('removedist', function() {
 	return del.sync('dist');
 });
 
-gulp.task('build', ['removedist', 'imagemin', 'sass', 'libs'], function() {
+gulp.task('build', ['removedist', 'imagemin', 'headersass', 'sass', 'libs'], function() {
 
 	var buildCss = gulp.src([
 		'app/css/fonts.min.css',
@@ -133,7 +141,6 @@ gulp.task('build', ['removedist', 'imagemin', 'sass', 'libs'], function() {
 	var buildJs = gulp.src('app/js/common.js').pipe(gulp.dest('dist/js'));
 
 });
-
 
 gulp.task('clearcache', function() {
 	return cache.clearAll();

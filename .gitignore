@@ -3,3 +3,4 @@ dist/
 app/css/
 app/header.min.css
 .idea/
+.editorconfig

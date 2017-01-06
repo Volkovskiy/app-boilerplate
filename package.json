@@ -1,7 +1,7 @@
 {
-  "name": "myapp",
+  "name": "webapplication",
   "version": "1.0.0",
-  "description": "",
+  "description": "Async HTML load, ES6 & Sass startkit",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,6 +22,7 @@
     "gulp-imagemin": "^3.0.3",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.2.0",
+    "gulp-style-inject": "0.0.3",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
     "imagemin-pngquant": "^5.0.0",
