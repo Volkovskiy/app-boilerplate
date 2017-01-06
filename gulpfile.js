@@ -14,6 +14,7 @@ var gulp = require('gulp'),
  	webpack = require('webpack-stream'),
 	babel = require('babel-loader'),
 	styleInject = require("gulp-style-inject"),
+    debug = require("gulp-debug"),
 	bourbon = require('node-bourbon');
 
 gulp.task('browser-sync', function() {
@@ -26,7 +27,8 @@ gulp.task('browser-sync', function() {
 });
 
 gulp.task('sass', function() {
-	return gulp.src('app/sass/**/*.sass')
+	return gulp.src('app/sass/main.sass')
+		.pipe(debug({title: 'sass'}))
 		.pipe(sass({
 			includePaths: bourbon.includePaths
 		}).on('error', sass.logError))
@@ -37,6 +39,7 @@ gulp.task('sass', function() {
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
 		.pipe(gulp.dest('app/css'))
+        .pipe(debug({title: 'css'}))
 		.pipe(browserSync.reload({
 			stream: true
 		}))
@@ -45,7 +48,8 @@ gulp.task('sass', function() {
 gulp.task('html', function () {
 	return setTimeout(function () {
 		return	gulp.src("./app/html/*.html")
-			.pipe(styleInject())
+			.pipe(styleInject({title: 'file'}))
+            .pipe(debug())
 			.pipe(gulp.dest("./app"));
 	}, 500)
 
@@ -70,9 +74,10 @@ gulp.task('headersass', ['html'], function() {
 
 gulp.task('libs', function() {
 	return gulp.src([
-			//'app/libs/jquery/dist/jquery.min.js',
-			// 'app/libs/magnific-popup/magnific-popup.min.js'
+			//'app/libs/jquery/dist/jquery.js',
+			//'app/libs/react/react.js'
 		])
+        .pipe(debug({title: 'libs'}))
 		.pipe(concat('libs.min.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('app/js'));
@@ -80,6 +85,7 @@ gulp.task('libs', function() {
 
 gulp.task('es5', function() {
 	return gulp.src("app/js/src/*.js")
+        .pipe(debug({title: 'ES6'}))
 		.pipe(webpack({
 			output: {
 				filename: 'common.js'
@@ -110,6 +116,7 @@ gulp.task('watch', ['sass', 'headersass', 'libs', 'es5', 'browser-sync'], functi
 
 gulp.task('imagemin', function() {
 	return gulp.src('app/img/**/*')
+        .pipe(debug({title: 'img'}))
 		.pipe(cache(imagemin({
 			interlaced: true,
 			progressive: true,
