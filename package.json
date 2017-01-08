@@ -25,7 +25,7 @@
     "gulp-sass": "^2.2.0",
     "gulp-style-inject": "0.0.3",
     "gulp-uglify": "^2.0.0",
-    "gulp-util": "^3.0.7",
+    "gulp-util": "^3.0.8",
     "imagemin-pngquant": "^5.0.0",
     "node-bourbon": "^4.2.8",
     "webpack": "^1.14.0",

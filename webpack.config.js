@@ -18,11 +18,11 @@ module.exports = {
 		extensions: ['', '.js']
 	},
 	devtool: isDevelopment ? 'source-map' : null,
-	plugins: [      new webpack.optimize.UglifyJsPlugin({
+	plugins: isDevelopment ? null  : [new webpack.optimize.UglifyJsPlugin({
 			compress: {
-			warnings:     false,
-			drop_console: true,
-			unsafe:       true
-		}
-	})]
+				warnings:     false,
+				drop_console: true,
+				unsafe:       true
+			}
+		})]
 };
