@@ -1,15 +1,44 @@
-<h1>Gulp + Webpack  web-application boilerplate</h1>
+# Gulp + Webpack  web-application boilerplate
+### Async loading, ES6, Sass
 
-<h4>Async loading, ES6, Sass</h4>
+- Fast HTML load template
+- ES6 compiler (Babel)
+- Sass
+- Sourcemaps for debugging sass & ES6 on development mode
 
-<p>
-   1. Async HTML load template, ES6 compiler (Babel), CSS/JS optimization & minification
-</p>
-<p>
-   2. Sourcemaps for debugging sass & ES6 on development mode
-</p>
+### Get started
+```sh
+$ git clone https://github.com/Volkovskiy/app-boilerplate.git
+$ cd app-boilerplate
+$ npm i
+$ gulp
+```
 
-<p>
-  Use "NODE_ENV=production gulp build" - to build & minify files without sourcemaps
-</p>
+### Build
+`NODE_ENV=production gulp build` - to build & minify files without sourcemaps.
 
+That's all. Get your files on `/app-boilerplate/dest` directory
+
+### Package list
+
+* babel-loader
+* babel-preset-es2015
+* browser-sync
+* del
+* gulp
+* gulp-autoprefixer
+* gulp-babel
+* gulp-cache
+* gulp-clean-css
+* gulp-concat
+* gulp-debug
+* gulp-imagemin
+* gulp-rename
+* gulp-sass
+* gulp-style-inject
+* gulp-uglify
+* gulp-util
+* imagemin-pngquant
+* node-bourbon
+* webpack
+* webpack-stream

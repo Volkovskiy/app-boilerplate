@@ -1,4 +1,7 @@
-var gulp = require('gulp'),
+module.exports = isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
+const webpackConfig = require('./webpack.config');
+
+const gulp = require('gulp'),
 	gutil = require('gulp-util'),
 	sass = require('gulp-sass'),
 	browserSync = require('browser-sync'),
@@ -11,15 +14,12 @@ var gulp = require('gulp'),
 	pngquant = require('imagemin-pngquant'),
 	cache = require('gulp-cache'),
 	autoprefixer = require('gulp-autoprefixer'),
-    webpackStream = require('webpack-stream'),
-    webpack = require('webpack'),
-	babel = require('babel-loader'),
+	webpackStream = require('webpack-stream'),
 	styleInject = require("gulp-style-inject"),
-    debug = require("gulp-debug"),
-    sourcemaps = require('gulp-sourcemaps'),
+	debug = require("gulp-debug"),
+	sourcemaps = require('gulp-sourcemaps'),
 	bourbon = require('node-bourbon');
 
-var isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
 
 gulp.task('browser-sync', function() {
 	browserSync({
@@ -31,7 +31,7 @@ gulp.task('browser-sync', function() {
 });
 
 gulp.task('sass', function() {
-	var pipeline = gulp.src('app/sass/main.sass');
+	var pipeline = gulp.src('app/sass/*.sass');
 		if (isDevelopment) {
             pipeline.pipe(sourcemaps.init())
 		}
@@ -100,45 +100,16 @@ gulp.task('libs', function() {
 gulp.task('es5', function() {
 	return gulp.src("app/js/src/*.js")
         .pipe(debug({title: 'ES6'}))
-		.pipe(webpackStream({
-			output: {
-				filename: 'common.js'
-			},
-			module: {
-				loaders: [{
-					loader: 'babel',
-					query: {
-						presets: ['es2015']
-					}
-				}]
-			},
-			resolve: {
-					extensions: ['', '.js']
-				},
-			devtool: isDevelopment ? 'source-map' : null,
-
-            plugins: [      new webpack.optimize.UglifyJsPlugin({
-                compress: {
-                    // don't show unreachable variables etc
-                    warnings:     false,
-                    drop_console: true,
-                    unsafe:       true
-                }
-            })]
-			}
-		))
-
+		.pipe(webpackStream(webpackConfig))
         //.pipe(uglify())
-
 		.pipe(gulp.dest('app/js'));
 });
 
 gulp.task('watch', ['sass', 'headersass', 'libs', 'es5', 'browser-sync'], function() {
 	gulp.watch('app/header.sass', ['headersass']);
 	gulp.watch('app/sass/**/*.sass', ['sass']);
-	gulp.watch('app/js/**/*.js', ['es5']);
+	gulp.watch('app/js/**/*.js', ['es5', browserSync.reload]);
 	gulp.watch('app/*.html', browserSync.reload);
-	gulp.watch('app/js/**/*.js', browserSync.reload);
 });
 
 gulp.task('imagemin', function() {
@@ -159,7 +130,7 @@ gulp.task('removedist', function() {
 	return del.sync('dist');
 });
 
-gulp.task('build', ['removedist', 'imagemin', 'headersass', 'sass', 'libs'], function() {
+gulp.task('build', ['removedist', 'es5', 'imagemin', 'headersass', 'sass', 'libs'], function() {
     var buildCss = gulp.src([
 		'app/css/fonts.min.css',
 		'app/css/main.min.css'
@@ -180,4 +151,5 @@ gulp.task('clearcache', function() {
 });
 
 gulp.task('default', ['watch']);
+
 

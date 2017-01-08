@@ -1,3 +1,2 @@
-const page = document.querySelector('body');
-
+const page = document.querySelector('#My-App');
 export default page;

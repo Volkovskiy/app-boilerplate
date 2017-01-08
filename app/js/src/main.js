@@ -1,3 +1,3 @@
 import page from './test';
 
-page.innerHTML = "<div>Hello world!!</div>";
+page.innerHTML = "<h1>Hello world</h1>";
