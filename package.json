@@ -1,10 +1,10 @@
 {
   "name": "webapplication",
   "version": "1.0.0",
-  "description": "Async HTML load, ES6 & Sass startkit",
-  "main": "index.js",
+  "description": "Fast HTML load, ES6 & Sass startkit",
+  "main": "./js/common.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "NODE_ENV=production gulp build"
   },
   "author": "Volkovskiy Valeriy",
   "license": "ISC",

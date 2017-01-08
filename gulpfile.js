@@ -19,7 +19,8 @@ const gulp = require('gulp'),
 	debug = require("gulp-debug"),
 	sourcemaps = require('gulp-sourcemaps'),
 	bourbon = require('node-bourbon'),
-	webpackConfig = require('./webpack.config');
+	webpackConfig = require('./webpack.config'),
+	libs = require('./libs');
 
 //init gulp tasks
 gulp.task('browser-sync', () => {
@@ -88,10 +89,7 @@ gulp.task('headersass', ['html'], () => {
 });
 
 gulp.task('libs', () => {
-	return gulp.src([
-			//'app/libs/jquery/dist/jquery.js',
-			//'app/libs/react/react.js'
-		])
+	return gulp.src(libs)
         .pipe(debug({title: 'libs'}))
 		.pipe(concat('libs.min.js'))
 		.pipe(uglify())
@@ -142,7 +140,7 @@ gulp.task('build', ['removedist', 'webpack', 'imagemin', 'headersass', 'sass', '
 
 	const buildFonts = gulp.src('app/fonts/**/*').pipe(gulp.dest('dist/fonts'));
 
-	const buildJs = gulp.src('app/js/common.js').pipe(gulp.dest('dist/js'));
+	const buildJs = gulp.src('app/js/*.js').pipe(gulp.dest('dist/js'));
 
 });
 

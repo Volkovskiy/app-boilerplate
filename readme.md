@@ -15,9 +15,15 @@ $ gulp
 ```
 
 ### Build
-`NODE_ENV=production gulp build` - to build & minify files without sourcemaps.
+```sh
+$ npm run build
+```
+or
+```sh
+$ NODE_ENV=production gulp build
+```
 
-That's all. Get your files on `/app-boilerplate/dest` directory
+That's all. Your files in `/app-boilerplate/dest`
 
 ### Package list
 
