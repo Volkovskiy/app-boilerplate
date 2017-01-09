@@ -92,7 +92,7 @@ gulp.task('libs', () => {
 	return gulp.src(libs)
         .pipe(debug({title: 'libs'}))
 		.pipe(concat('libs.min.js'))
-		.pipe(uglify())
+		.pipe(isDevelopment ? debug() : uglify())
 		.pipe(gulp.dest('app/js'));
 });
 
