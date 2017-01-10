@@ -61,17 +61,19 @@ gulp.task('sass', () => {
 		}))
 });
 
-gulp.task('html', function () {
-	return setTimeout(function () {
+gulp.task('html', () => {
+
 		return	gulp.src("./app/html/*.html")
 			.pipe(styleInject({title: 'file'}))
             .pipe(debug())
-			.pipe(gulp.dest("./app"));
-	}, 1000)
+			.pipe(gulp.dest("./app"))
+			.pipe(browserSync.reload({
+		stream: true
+	}))
 
 });
 
-gulp.task('headersass', ['html'], () => {
+gulp.task('headersass', () => {
 	return gulp.src('app/header.sass')
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -103,11 +105,11 @@ gulp.task('webpack', () => {
 		.pipe(gulp.dest('app/js'));
 });
 
-gulp.task('watch', ['sass', 'headersass', 'libs', 'webpack', 'browser-sync'], () => {
-	gulp.watch('app/header.sass', ['headersass']);
+gulp.task('watch', ['sass', 'headersass', 'libs', 'webpack', 'html', 'browser-sync'], () => {
+	gulp.watch('app/header.sass', ['headersass', 'html']);
 	gulp.watch('app/sass/**/*.sass', ['sass']);
 	gulp.watch('app/js/src/**/*.js', ['webpack', browserSync.reload]);
-	gulp.watch('app/*.html', browserSync.reload);
+	gulp.watch('app/html/*.html', ['html', browserSync.reload]);
 });
 
 gulp.task('imagemin', () => {
