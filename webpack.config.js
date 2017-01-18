@@ -3,8 +3,11 @@ const webpack = require('webpack'),
 	isDevelopment = require('./gulpfile');
 
 module.exports = {
+	entry: {
+		main: './src/js/main.js'
+	},
 	output: {
-		filename: 'common.js'
+		filename: '[name].js'
 	},
 	module: {
 		loaders: [{

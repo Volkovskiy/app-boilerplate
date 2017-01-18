@@ -20,26 +20,24 @@ const gulp = require('gulp'),
 	sourcemaps = require('gulp-sourcemaps'),
 	bourbon = require('node-bourbon'),
 	webpackConfig = require('./webpack.config'),
-	libs = require('./libs');
+	libs = require('./src/js/libs');
 
 //init gulp tasks
 gulp.task('browser-sync', () => {
 	browserSync({
 		server: {
-			baseDir: 'app'
+			baseDir: './app'
 		},
 		notify: false
 	});
 });
 
 gulp.task('sass', () => {
-	let pipeline = gulp.src('app/sass/*.sass');
+	let pipeline = gulp.src(['./src/sass/fonts.sass', './src/sass/main.sass']);
 		if (isDevelopment) {
             pipeline.pipe(sourcemaps.init())
 		}
-
 		pipeline = pipeline
-
 		.pipe(debug({title: 'sass'}))
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -54,27 +52,13 @@ gulp.task('sass', () => {
         pipeline.pipe(sourcemaps.write())
     }
 		return pipeline
-		.pipe(gulp.dest('app/css'))
+		.pipe(gulp.dest('./app/css'))
         .pipe(debug({title: 'css'}))
-		.pipe(browserSync.reload({
-			stream: true
-		}))
-});
-
-gulp.task('html', () => {
-
-		return	gulp.src("./app/html/*.html")
-			.pipe(styleInject({title: 'file'}))
-            .pipe(debug())
-			.pipe(gulp.dest("./app"))
-			.pipe(browserSync.reload({
-		stream: true
-	}))
-
+		.pipe(browserSync.stream())
 });
 
 gulp.task('headersass', () => {
-	return gulp.src('app/header.sass')
+	return gulp.src('./src/sass/header.sass')
 		.pipe(sass({
 			includePaths: bourbon.includePaths
 		}).on('error', sass.logError))
@@ -84,10 +68,16 @@ gulp.task('headersass', () => {
 		}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest('app'))
-		.pipe(browserSync.reload({
-			stream: true
-		}))
+		.pipe(gulp.dest('./app/css'))
+		.pipe(browserSync.stream())
+});
+
+gulp.task('html', () => {
+	return gulp.src("./src/*.html")
+		.pipe(debug({title: 'html-in'}))
+		.pipe(styleInject())
+		.pipe(gulp.dest("./app"))
+		.pipe(debug({title: 'html-out'}));
 });
 
 gulp.task('libs', () => {
@@ -99,17 +89,18 @@ gulp.task('libs', () => {
 });
 
 gulp.task('webpack', () => {
-	return gulp.src("app/js/src/*.js")
-        .pipe(debug({title: 'ES6'}))
+	return gulp.src("./src/js/*.js")
+        .pipe(debug({title: 'webpack'}))
 		.pipe(webpackStream(webpackConfig))
-		.pipe(gulp.dest('app/js'));
+		.pipe(gulp.dest('./app/js'));
 });
 
-gulp.task('watch', ['sass', 'headersass', 'libs', 'webpack', 'html', 'browser-sync'], () => {
-	gulp.watch('app/header.sass', ['headersass', 'html']);
-	gulp.watch('app/sass/**/*.sass', ['sass']);
-	gulp.watch('app/js/src/**/*.js', ['webpack', browserSync.reload]);
-	gulp.watch('app/html/*.html', ['html', browserSync.reload]);
+gulp.task('watch', ['sass', 'headersass', 'libs', 'webpack', 'browser-sync', 'html'], () => {
+	gulp.watch('./app/css/header.min.css', ['html', browserSync.reload]);
+	gulp.watch('./src/sass/header.sass', ['headersass']);
+	gulp.watch('./src/sass/**/*.sass', ['sass']);
+	gulp.watch('./src/js/**/*.js', ['webpack', browserSync.reload]);
+	gulp.watch('./src/*.html', ['html', browserSync.reload]);
 });
 
 gulp.task('imagemin', () => {
@@ -130,14 +121,14 @@ gulp.task('removedist', () => {
 	return del.sync('dist');
 });
 
-gulp.task('build', ['removedist', 'webpack', 'imagemin', 'headersass', 'sass', 'libs'], () => {
+gulp.task('build', ['removedist', 'webpack', 'imagemin', 'headersass', 'sass', 'libs', 'html'], () => {
     const buildCss = gulp.src([
 		'app/css/fonts.min.css',
 		'app/css/main.min.css'
 	]).pipe(gulp.dest('dist/css'));
 
-	const buildFiles = gulp.src([
-		'app/index.html'
+	const buildHtml = gulp.src([
+		'app/*.html'
 	]).pipe(gulp.dest('dist'));
 
 	const buildFonts = gulp.src('app/fonts/**/*').pipe(gulp.dest('dist/fonts'));

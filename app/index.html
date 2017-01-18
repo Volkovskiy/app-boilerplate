@@ -27,7 +27,7 @@
 
 	<!-- Header -->
 	<style>
-::-webkit-input-placeholder{color:#666;opacity:1}:-moz-placeholder{color:#666;opacity:1}::-moz-placeholder{color:#666;opacity:1}:-ms-input-placeholder{color:#666;opacity:1}body input:focus:required:invalid,body input:required:valid,body textarea:focus:required:invalid,body textarea:required:valid{color:#666}body{font-size:16px;min-width:320px;position:relative;line-height:1.6;font-family:roboto,sans-serif;overflow-x:hidden}h1{color:red;font-size:13px}
+::-webkit-input-placeholder{color:#666;opacity:1}:-moz-placeholder{color:#666;opacity:1}::-moz-placeholder{color:#666;opacity:1}:-ms-input-placeholder{color:#666;opacity:1}body input:focus:required:invalid,body input:required:valid,body textarea:focus:required:invalid,body textarea:required:valid{color:#666}body{font-size:16px;min-width:320px;position:relative;line-height:1.6;font-family:roboto,sans-serif;overflow-x:hidden}h1{color:red;font-size:33px}
 </style>
 
 	<!-- Load CSS, CSS Localstorage & WebFonts -->
@@ -36,11 +36,9 @@
 	<!-- Load Fonts CSS -->
 	<script>
 		loadCSS( "css/fonts.min.css?ver=1.0.0", false, "all" ); // Loading fonts, if the site is located in a subfolder
-		// loadLocalStorageCSS( "webfonts", "css/fonts.min.css?ver=1.0.0" ); // Loading fonts, if the site is at the root
 	</script>
 
 	<!-- Load Custom CSS -->
-	<!--<script>loadCSS( "header.min.css?ver=1.0.0", false, "all" );</script>-->
 	<script>loadCSS( "css/main.min.css?ver=1.0.0", false, "all" );</script>
 
 	<!-- Load Custom CSS without JS Start -->
@@ -66,7 +64,7 @@
 	<!-- loading JS -->
 	<script>var scr = {"scripts":[
 		{"src" : "js/libs.min.js", "async" : false},
-		{"src" : "js/common.js", "async" : false}
+		{"src" : "js/main.js", "async" : false}
 		]};!function(t,n,r){"use strict";var c=function(t){if("[object Array]"!==Object.prototype.toString.call(t))return!1;for(var r=0;r<t.length;r++){var c=n.createElement("script"),e=t[r];c.src=e.src,c.async=e.async,n.body.appendChild(c)}return!0};t.addEventListener?t.addEventListener("load",function(){c(r.scripts);},!1):t.attachEvent?t.attachEvent("onload",function(){c(r.scripts)}):t.onload=function(){c(r.scripts)}}(window,document,scr);
 	</script>
 

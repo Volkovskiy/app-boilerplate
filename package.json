@@ -4,7 +4,7 @@
   "description": "Fast HTML load, ES6 & Sass startkit",
   "main": "./js/common.js",
   "scripts": {
-    "build": "NODE_ENV=production gulp build"
+    "build": "set NODE_ENV=production ./gulpfile.js && gulp build"
   },
   "author": "Volkovskiy Valeriy",
   "license": "ISC",
