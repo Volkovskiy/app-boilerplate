@@ -5,10 +5,7 @@ module.exports = isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV =
 const gulp = require('gulp'),
 	sass = require('gulp-sass'),
 	browserSync = require('browser-sync'),
-	concat = require('gulp-concat'),
-	uglify = require('gulp-uglify'),
 	cleanCSS = require('gulp-clean-css'),
-	rename = require('gulp-rename'),
 	del = require('del'),
 	imagemin = require('gulp-imagemin'),
 	pngquant = require('imagemin-pngquant'),
@@ -42,11 +39,7 @@ gulp.task('sass', () => {
 			includePaths: bourbon.includePaths
 		}).on('error', sass.logError))
         .pipe(cleanCSS())
-		.pipe(autoprefixer(['last 15 versions']))
-        .pipe(rename({
-            suffix: '.min',
-            prefix: ''
-        }));
+		.pipe(autoprefixer(['last 15 versions']));
     if (isDevelopment) {
         pipeline.pipe(sourcemaps.write())
     }
@@ -61,10 +54,6 @@ gulp.task('headersass', () => {
 		.pipe(sass({
 			includePaths: bourbon.includePaths
 		}).on('error', sass.logError))
-		.pipe(rename({
-			suffix: '.min',
-			prefix: ''
-		}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
 		.pipe(gulp.dest('./app/css'))
@@ -114,8 +103,8 @@ gulp.task('removedist', () => {
 
 gulp.task('build', ['removedist', 'webpack', 'imagemin', 'headersass', 'sass', 'html'], () => {
     const buildCss = gulp.src([
-		'app/css/fonts.min.css',
-		'app/css/main.min.css'
+		'app/css/fonts.css',
+		'app/css/main.css'
 	]).pipe(gulp.dest('dist/css'));
 
 	const buildHtml = gulp.src([
