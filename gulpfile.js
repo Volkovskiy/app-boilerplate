@@ -19,8 +19,7 @@ const gulp = require('gulp'),
 	debug = require("gulp-debug"),
 	sourcemaps = require('gulp-sourcemaps'),
 	bourbon = require('node-bourbon'),
-	webpackConfig = require('./webpack.config'),
-	libs = require('./src/js/libs');
+	webpackConfig = require('./webpack.config');
 
 //init gulp tasks
 gulp.task('browser-sync', () => {
@@ -80,14 +79,6 @@ gulp.task('html', () => {
 		.pipe(debug({title: 'html-out'}));
 });
 
-gulp.task('libs', () => {
-	return gulp.src(libs)
-        .pipe(debug({title: 'libs'}))
-		.pipe(concat('libs.min.js'))
-		.pipe(isDevelopment ? debug() : uglify())
-		.pipe(gulp.dest('app/js'));
-});
-
 gulp.task('webpack', () => {
 	return gulp.src("./src/js/*.js")
         .pipe(debug({title: 'webpack'}))
@@ -95,7 +86,7 @@ gulp.task('webpack', () => {
 		.pipe(gulp.dest('./app/js'));
 });
 
-gulp.task('watch', ['sass', 'headersass', 'libs', 'webpack', 'browser-sync', 'html'], () => {
+gulp.task('watch', ['sass', 'headersass', 'webpack', 'browser-sync', 'html'], () => {
 	gulp.watch('./app/css/header.min.css', ['html', browserSync.reload]);
 	gulp.watch('./src/sass/header.sass', ['headersass']);
 	gulp.watch('./src/sass/**/*.sass', ['sass']);
@@ -121,7 +112,7 @@ gulp.task('removedist', () => {
 	return del.sync('dist');
 });
 
-gulp.task('build', ['removedist', 'webpack', 'imagemin', 'headersass', 'sass', 'libs', 'html'], () => {
+gulp.task('build', ['removedist', 'webpack', 'imagemin', 'headersass', 'sass', 'html'], () => {
     const buildCss = gulp.src([
 		'app/css/fonts.min.css',
 		'app/css/main.min.css'

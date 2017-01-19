@@ -1,6 +1,6 @@
 const webpack = require('webpack'),
 	babel = require('babel-loader');
-	isDevelopment = require('./gulpfile');
+let	isDevelopment = require('./gulpfile');
 
 module.exports = {
 	entry: {
@@ -11,13 +11,17 @@ module.exports = {
 	},
 	module: {
 		loaders: [{
+			test: /\.js$/,
+			exclude: /node_modules/,
 			loader: 'babel'
 		}]
 	},
+
 	resolve: {
-		extensions: ['', '.js']
+		extensions: ['', '.js'],
+		modulesDirectories: ['node_modules']
 	},
-	devtool: isDevelopment ? 'source-map' : null,
+	devtool: isDevelopment ? 'eval-source-map' : null,
 	plugins: isDevelopment ? null  : [new webpack.optimize.UglifyJsPlugin({
 			compress: {
 				warnings:     false,
