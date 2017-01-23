@@ -4,4 +4,4 @@ import page from './test';
 
 //console.log(ReactDOM, "ss");
 
-page.innerHTML = "<h1>Hello world!</h1>";
+page.innerHTML = "<h1>Hello world!!!</h1>";
