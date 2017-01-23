@@ -48,10 +48,10 @@ function headersass() {
         }).on('error', sass.logError))
         .pipe(autoprefixer(['last 15 versions']))
         .pipe(cleanCSS())
-        .pipe(uncss({
+        .pipe(gulpif(!isDevelopment, uncss({
             html: ['app/*.html'],
             ignore: ['h1']
-        }))
+        })))
         .pipe(gulp.dest('./app/css'))
 }
 
@@ -132,6 +132,6 @@ function toDest(done) {
     done()
 }
 
-gulp.task('bundle', gulp.parallel(webpack, styles, gulp.series(headersass, html)));
+gulp.task('bundle', gulp.parallel(webpack, styles, img, gulp.series(headersass, html)));
 gulp.task('default', gulp.series('bundle', gulp.parallel(watch, brsync)));
-gulp.task('build', gulp.series(removedist, 'bundle', img, toDest));
+gulp.task('build', gulp.series(removedist, 'bundle', toDest));
