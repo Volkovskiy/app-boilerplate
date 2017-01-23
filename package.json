@@ -22,8 +22,10 @@
     "gulp-imagemin": "^3.0.3",
     "gulp-sass": "^2.2.0",
     "gulp-style-inject": "0.0.3",
+    "gulp-uncss": "^1.0.6",
     "imagemin-pngquant": "^5.0.0",
     "node-bourbon": "^4.2.8",
+    "uncss": "^0.14.1",
     "webpack": "^1.14.0",
     "webpack-stream": "^3.2.0"
   }

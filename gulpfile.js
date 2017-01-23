@@ -4,6 +4,7 @@ module.exports = isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV =
 //init packages
 const gulp = require('gulp'),
 	sass = require('gulp-sass'),
+	uncss = require('gulp-uncss'),
 	browserSync = require('browser-sync'),
 	cleanCSS = require('gulp-clean-css'),
 	del = require('del'),
@@ -15,8 +16,14 @@ const gulp = require('gulp'),
 	styleInject = require("gulp-style-inject"),
 	debug = require("gulp-debug"),
 	sourcemaps = require('gulp-sourcemaps'),
+	gulpif = require("gulp-if"),
 	bourbon = require('node-bourbon'),
 	webpackConfig = require('./webpack.config');
+
+const uncssConfig = {
+        html: ['app/*.html'],
+        ignore: ['h1']
+    };
 
 //init gulp tasks
 gulp.task('browser-sync', () => {
@@ -29,21 +36,16 @@ gulp.task('browser-sync', () => {
 });
 
 gulp.task('sass', () => {
-	let pipeline = gulp.src(['./src/sass/fonts.sass', './src/sass/main.sass']);
-		if (isDevelopment) {
-            pipeline.pipe(sourcemaps.init())
-		}
-		pipeline = pipeline
+	return gulp.src('./src/sass/main.sass')
+		.pipe(gulpif(isDevelopment, sourcemaps.init()))
 		.pipe(debug({title: 'sass'}))
 		.pipe(sass({
 			includePaths: bourbon.includePaths
 		}).on('error', sass.logError))
+		.pipe(gulpif(!isDevelopment, uncss(uncssConfig)))
         .pipe(cleanCSS())
-		.pipe(autoprefixer(['last 15 versions']));
-    if (isDevelopment) {
-        pipeline.pipe(sourcemaps.write())
-    }
-		return pipeline
+		.pipe(autoprefixer(['last 15 versions']))
+    	.pipe(gulpif(isDevelopment, sourcemaps.write()))
 		.pipe(gulp.dest('./app/css'))
         .pipe(debug({title: 'css'}))
 		.pipe(browserSync.stream())
@@ -56,8 +58,9 @@ gulp.task('headersass', () => {
 		}).on('error', sass.logError))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest('./app/css'))
-		.pipe(browserSync.stream())
+        .pipe(uncss(uncssConfig))
+		.pipe(gulp.dest('./app/css'));
+		//.pipe(browserSync.stream())
 });
 
 gulp.task('html', () => {
@@ -76,7 +79,7 @@ gulp.task('webpack', () => {
 });
 
 gulp.task('watch', ['sass', 'headersass', 'webpack', 'browser-sync', 'html'], () => {
-	gulp.watch('./app/css/header.min.css', ['html', browserSync.reload]);
+	gulp.watch('./app/css/header.css', ['html', browserSync.reload]);
 	gulp.watch('./src/sass/header.sass', ['headersass']);
 	gulp.watch('./src/sass/**/*.sass', ['sass']);
 	gulp.watch('./src/js/**/*.js', ['webpack', browserSync.reload]);
@@ -101,7 +104,7 @@ gulp.task('removedist', () => {
 	return del.sync('dist');
 });
 
-gulp.task('build', ['removedist', 'webpack', 'imagemin', 'headersass', 'sass', 'html'], () => {
+gulp.task('build', ['removedist', 'webpack', 'headersass', 'sass', 'imagemin','html'], () => {
     const buildCss = gulp.src([
 		'app/css/fonts.css',
 		'app/css/main.css'
@@ -122,5 +125,3 @@ gulp.task('clearcache', () => {
 });
 
 gulp.task('default', ['watch']);
-
-
