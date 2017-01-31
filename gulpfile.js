@@ -4,6 +4,8 @@ module.exports = isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV =
 //init packages
 const gulp = require('gulp'),
 	sass = require('gulp-sass'),
+    webpack = require('webpack'),
+    babel = require('babel-loader'),
 	uncss = require('gulp-uncss'),
 	browserSync = require('browser-sync'),
 	cleanCSS = require('gulp-clean-css'),
@@ -17,8 +19,36 @@ const gulp = require('gulp'),
 	debug = require("gulp-debug"),
 	sourcemaps = require('gulp-sourcemaps'),
 	gulpif = require("gulp-if"),
-	bourbon = require('node-bourbon'),
-	webpackConfig = require('./webpack.config');
+	bourbon = require('node-bourbon');
+
+const	webpackConfig  = {
+    entry: {
+        main: './src/js/main.js'
+    },
+    output: {
+        filename: '[name].js'
+    },
+    module: {
+        loaders: [{
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel'
+        }]
+    },
+
+    resolve: {
+        extensions: ['', '.js'],
+        modulesDirectories: ['node_modules']
+    },
+    devtool: isDevelopment ? 'eval-source-map' : null,
+    plugins: isDevelopment ? null  : [new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings:     false,
+                drop_console: true,
+                unsafe:       true
+            }
+        })]
+};
 
 
 gulp.task(styles);
@@ -40,9 +70,9 @@ function styles() {
         .pipe(browserSync.stream())
 }
 
-gulp.task(headersass);
-function headersass() {
-    return gulp.src('./src/sass/header.sass')
+gulp.task(critical);
+function critical() {
+    return gulp.src('./src/sass/critical.sass')
         .pipe(sass({
             includePaths: bourbon.includePaths
         }).on('error', sass.logError))
@@ -66,10 +96,10 @@ function html() {
 
 }
 
-gulp.task(webpack);
-function webpack() {
+gulp.task(scripts);
+function scripts() {
     return gulp.src("./src/js/*.js")
-        .pipe(debug({title: 'webpack'}))
+        .pipe(debug({title: 'scripts'}))
         .pipe(webpackStream(webpackConfig))
         .pipe(gulp.dest('./app/js'))
 		.pipe(browserSync.stream())
@@ -113,9 +143,9 @@ function brsync() {
 
 gulp.task(watch);
 function watch() {
-    gulp.watch('./src/sass/header.sass', gulp.series(headersass, html) );
+    gulp.watch('./src/sass/critical.sass', gulp.series(critical, html) );
     gulp.watch('./src/sass/**/main.sass', gulp.series(styles));
-    gulp.watch('./src/js/**/*.js', gulp.series(webpack));
+    gulp.watch('./src/js/**/*.js', gulp.series(scripts));
     gulp.watch('./src/*.html', gulp.series(html));
 }
 
@@ -132,6 +162,6 @@ function toDest(done) {
     done()
 }
 
-gulp.task('bundle', gulp.parallel(webpack, styles, img, gulp.series(headersass, html)));
+gulp.task('bundle', gulp.parallel(scripts, styles, img, gulp.series(critical, html)));
 gulp.task('default', gulp.series('bundle', gulp.parallel(watch, brsync)));
 gulp.task('build', gulp.series(removedist, 'bundle', toDest));
