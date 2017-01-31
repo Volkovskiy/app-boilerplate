@@ -1,5 +1,6 @@
 node_modules/
 dist/
 .idea/
-
-app/
+app/css/
+app/js/
+app/index.html

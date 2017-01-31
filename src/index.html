@@ -18,14 +18,14 @@
 	<link rel="apple-touch-icon" sizes="72x72" href="img/favicon/apple-touch-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="114x114" href="img/favicon/apple-touch-icon-114x114.png">
 	<!-- Mobile theme color  -->
-    <meta name="theme-color" content="#000">
-    <meta name="msapplication-navbutton-color" content="#000">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#000">
+    <meta name="theme-color" content="#f39c12">
+    <meta name="msapplication-navbutton-color" content="#f39c12">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#f39c12">
 
 	<!-- Inject critical css -->
 	<!-- inject-style src="./app/css/critical.css" -->
 
-	<!-- LoadCss function-->
+	<!-- loadCss function-->
 	<script>
         !function(a){"use strict";var b=function(b,c,d){function j(a){return e.body?a():void setTimeout(function(){j(a)})}function l(){f.addEventListener&&f.removeEventListener("load",l),f.media=d||"all"}var g,e=a.document,f=e.createElement("link");if(c)g=c;else{var h=(e.body||e.getElementsByTagName("head")[0]).childNodes;g=h[h.length-1]}var i=e.styleSheets;f.rel="stylesheet",f.href=b,f.media="only x",j(function(){g.parentNode.insertBefore(f,c?g:g.nextSibling)});var k=function(a){for(var b=f.href,c=i.length;c--;)if(i[c].href===b)return a();setTimeout(function(){k(a)})};return f.addEventListener&&f.addEventListener("load",l),f.onloadcssdefined=k,k(l),f};"undefined"!=typeof exports?exports.loadCSS=b:a.loadCSS=b}("undefined"!=typeof global?global:this);
 	</script>
@@ -33,8 +33,12 @@
         loadCSS( "./css/main.css" );
 	</script>
 
-    <!--  build files -->
+	<!-- LoadCss  without js-->
+	<noscript>
+		<link rel="stylesheet" href="./css/main.css" media="all">
+	</noscript>
 
+    <!-- Scripts -->
     <script defer src="./js/main.js"></script>
 
 </head>

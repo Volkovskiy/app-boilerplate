@@ -1,5 +1,5 @@
 // init development & production modes
-module.exports = isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
+let isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
 
 //init packages
 const gulp = require('gulp'),
@@ -143,10 +143,10 @@ function brsync() {
 
 gulp.task(watch);
 function watch() {
-    gulp.watch('./src/sass/critical.sass', gulp.series(critical, html) );
-    gulp.watch('./src/sass/**/main.sass', gulp.series(styles));
-    gulp.watch('./src/js/**/*.js', gulp.series(scripts));
-    gulp.watch('./src/*.html', gulp.series(html));
+    gulp.watch(['./src/sass/critical.sass'], gulp.series(critical, html) );
+    gulp.watch(['./src/sass/**/*.sass', '!src/sass/critical.sass'], gulp.series(styles));
+    gulp.watch(['./src/js/**/*.js'], gulp.series(scripts));
+    gulp.watch(['./src/*.html'], gulp.series(html));
 }
 
 function toDest(done) {
